@@ -7,7 +7,7 @@ This is very much a work in progress, so only parts of the API are supported (ma
 
 Some of the features simply do not work (e.g. `set_page_slug()` ), but this seems to be on the NationBuilder end, not a problem with the library.
 
-It relies on [http://code.google.com/httplib2](httplib2) and [https://code.google.com/p/google-api-python-client/wiki/OAuth2Client](oauth2client). These are used because the original use of this was running on GAE. 
+It relies on [httplib2](https://code.google.com/httplib2) and [oauth2client](https://code.google.com/p/google-api-python-client/wiki/OAuth2Client). These are used because the original use of this was running on GAE. 
 
 It also uses the builtin (I think) `json`, `urllib2` and `logging` modules. 
 
