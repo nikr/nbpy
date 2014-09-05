@@ -3,9 +3,10 @@
 # Filename: nb_api.py
 # Description: Base functionality for the NationBuilder API
 # Author: Niklas Rehfeld
-# Copyright 2014 Niklas Rehfeld# Created: Fri Sep  5 15:03:53 2014 (+1200)
+# Copyright 2014 Niklas Rehfeld
+# Created: Fri Sep  5 15:03:53 2014 (+1200)
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
+#    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
 #    You may obtain a copy of the License at
 #
@@ -22,13 +23,24 @@
 """
 Base functionality for the NAtionBuilder APIs.
 
-classes:
-  NationBuilderAPI -- Base class of the other APIs.
+Classes:
+    NationBuilderAPI
+     -- Base class of the other APIs.
+    NBResponseError(Exception)
+     -- Base Exception for non-200 server responses
+    NBNotFoundError(NBResponseError)
+     -- Exception signifying that the object (person/tag/etc.) that was queried
+       was not found. Usually in response to a 404 response from the server.
+    NBBadRequestError(NBResponseError)
+     -- Exception signifying that the data sent to the server was bad. Usually
+        in response to a 400 response from the server.
 """
 
 import logging
 import httplib2
 from oauth2client import AccessTokenCredentials
+
+log = logging.getLogger('nbpy')
 
 
 class NationBuilderApi(object):
@@ -80,8 +92,8 @@ class NationBuilderApi(object):
         if headers.status < 200 or headers.status > 299:
             self._raise_error(attempted_action, headers, content, url)
         else:
-            logging.debug("Request to %s successful.",
-                          url or attempted_action or "Unknown")
+            log.debug("Request to %s successful.",
+                      url or attempted_action or "Unknown")
 
     def _raise_error(self, msg, header, body, url):
         """Raises the correct type of exception."""
@@ -113,6 +125,6 @@ class NBBadRequestError(NBResponseError):
 
 
 class NBNotFoundError(NBResponseError):
-    """Generally indicates that at 404 error was returned...
+    """Generally indicates that a 404 error was returned...
     contains the header and body of the server response."""
     pass
