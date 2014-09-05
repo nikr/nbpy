@@ -24,6 +24,7 @@ class People(NationBuilderApi):
         super(People, self).__init__(slug, token)
 
         self.GET_PERSON_URL = self.BASE_URL + '/people/{0}'
+        self.MATCH_URL = self.BASE_URL + '/people/match?'
         self.MATCH_EMAIL_URL = self.BASE_URL + "/people/match?email={0}"
         self.UPDATE_PERSON_URL = self.GET_PERSON_URL
         self.REMOVE_TAG_URL = self.UPDATE_PERSON_URL + "/taggings/{1}"
@@ -203,6 +204,25 @@ class People(NationBuilderApi):
             update_string += 'false'
         update_string += '}}'
         return self.update_person(person_id, update_string)
+
+    def match_person(self, **kwargs):
+        """
+        Match a person by criteria.
+
+        This will return a person that matches one or more criteria exactly,
+        and it is a unique match. If there is no match, or there are multiple
+        matches, it will raise an exception.
+
+        The keyword arguments can be 'email', 'first_name', 'last_name',
+        'phone', or 'mobile'.
+        """
+        self._authorise()
+        query_string = '&'.join([key + '=' + kwargs[key] for key in
+                                 kwargs.keys])
+        url = self.MATCH_URL + query_string
+        hdr, cnt = self.http.request(url, headers=self.HEADERS)
+        self._check_response(hdr, cnt, "Match %s" % kwargs, url)
+        return json.loads(cnt)
 
     def get_person_by_email(self, email):
         """Returns the first person that has a given email address.
