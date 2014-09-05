@@ -210,17 +210,31 @@ class People(NationBuilderApi):
         Parameters:
             email : the email address to look for.
 
-        Returns: A person record
+        Returns: A person record or None if no match.
         """
         self._authorise()
         url = self.MATCH_EMAIL_URL.format(urllib2.quote(email))
         header, content = self.http.request(url, headers=self.HEADERS)
-        self._check_response(header, content, "Get person by email", url)
-        return json.loads(content)
+        if header.status == 400:
+            if json.loads(content)['code'] == 'no_matches':
+                return None
+            else:
+                self._check_response(header, content,
+                                     "Get person by email", url)
+        elif header.status == 200:
+            return json.loads(content)
+        else:
+            self._check_response(header, content, "Get person by email", url)
 
     def get_id_by_email(self, email):
-        """wrapper around get_person_by_email() that just returns the NB ID."""
+        """
+        wrapper around get_person_by_email().
+
+        Returns: the NB ID or None if not found.
+        """
         person = self.get_person_by_email(email)
+        if person is None:
+            return None
         return person['person']['id']
 
     def do_registration(self, nb_id):
