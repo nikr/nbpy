@@ -21,7 +21,7 @@
 #
 
 """
-Base functionality for the NAtionBuilder APIs.
+Base functionality for the NationBuilder APIs.
 
 Classes:
     NationBuilderAPI
