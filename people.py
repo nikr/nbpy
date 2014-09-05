@@ -1,13 +1,9 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 """
 Functionality from the NationBuilder People API.
 
-
 classes:
-  People -- Used to access the People API.
-
+    People
+     -- Used to access the People API.
 
 """
 
@@ -18,7 +14,12 @@ import json
 
 class People(NationBuilderApi):
 
-    """Used to get at the People API"""
+    """
+    Used to get at the People API
+
+    See http://nationbuilder.com/people_api for info on the data returned
+    """
+
     def __init__(self, slug, token):
         super(People, self).__init__(slug, token)
 
@@ -39,12 +40,7 @@ class People(NationBuilderApi):
             person_id - The person's NationBuilder ID.
 
         Returns:
-            a dictionary-like object of the person
-
-        Raises:
-            NBResponseError if the response is not '200 OK'
-
-        See http://nationbuilder.com/people_api for info on the data returned
+            A person record, as a dict.
         """
         self._authorise()
         # we need it as a string...
@@ -66,9 +62,6 @@ class People(NationBuilderApi):
 
         Returns:
             a list of people records.
-
-        Raises:
-            NBResponseError if responses are not '200 OK'
         """
         self._authorise()
         page = 1
@@ -125,13 +118,13 @@ class People(NationBuilderApi):
             return json.loads(content)
 
         page = get_list_tags_page(tags_per_page, 1)
-        tags = page['results']
+        tags = [tag['name'] for tag in page['results']]
         total_pages = page['total_pages']
         current_page = page['page']
         while total_pages > current_page:
             current_page += 1
             next_page = get_list_tags_page(tags_per_page, current_page)
-            tags.extend(next_page['results'])
+            tags.extend([tag['name'] for tag in next_page['results']])
         return tags
 
     def remove_tag(self, person_id, tag):
