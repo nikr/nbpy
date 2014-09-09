@@ -58,6 +58,8 @@ class NationBuilderApi(object):
                                 '.nationbuilder.com/api/v1')
         self.PAGINATE_QUERY = "?page={page}&per_page={per_page}"
 
+        self.GET_PERSON_URL = self.BASE_URL + '/people/{0}'
+
         self.USER_AGENT = "nbpy/0.2"
 
         self.HEADERS = {
