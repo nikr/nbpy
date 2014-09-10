@@ -4,7 +4,6 @@
 # Description: Base functionality for the NationBuilder API
 # Author: Niklas Rehfeld
 # Copyright 2014 Niklas Rehfeld
-# Created: Fri Sep  5 15:03:53 2014 (+1200)
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -44,6 +43,7 @@ log = logging.getLogger('nbpy')
 
 
 class NationBuilderApi(object):
+
     def __init__(self, nation_slug, api_key):
         """Create a NationBuilder Connection.
 
@@ -102,18 +102,20 @@ class NationBuilderApi(object):
         error_map = {
             404: NBNotFoundError,
             400: NBBadRequestError
-            }
+        }
         err = error_map.get(header.status) or NBResponseError
         raise err(msg, header, body, url)
 
 
 class NBResponseError(Exception):
+
     """Base class for all non-200 OK responses.
     Includes the following additional fields:
     header: the response headers
     body: the response body
     url: the requested url.
     """
+
     def __init__(self, msg, header, body, url):
         self.url = url
         self.header = header
@@ -122,11 +124,13 @@ class NBResponseError(Exception):
 
 
 class NBBadRequestError(NBResponseError):
+
     """Indicates a bad request"""
     pass
 
 
 class NBNotFoundError(NBResponseError):
+
     """Generally indicates that a 404 error was returned...
     contains the header and body of the server response."""
     pass
