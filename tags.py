@@ -5,13 +5,13 @@
 # Author: Niklas Rehfeld
 #
 #    Copyright 2014 Niklas Rehfeld
-# 
+#
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
 #    You may obtain a copy of the License at
-# 
+#
 #        http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 #    Unless required by applicable law or agreed to in writing, software
 #    distributed under the License is distributed on an "AS IS" BASIS,
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,7 @@ People Tags API. See http://nationbuilder.com/people_tags_api for more details.
 """
 
 import urllib2
-import NationBuilderApi
+from nb_api import NationBuilderApi
 import json
 
 
@@ -36,8 +36,8 @@ class Tags(NationBuilderApi):
         self.GET_PERSON_TAGS_URL = self.GET_PERSON_URL + "/taggings"
         self.REMOVE_TAG_URL = self.GET_PERSON_URL + "/taggings/{1}"
         self.LIST_TAGS_URL = self.BASE_URL + "/tags" + self.PAGINATE_QUERY
-        self.GET_BY_TAG_URL = ''.join(self.BASE_URL, "/tags/{tag}/people",
-                                      self.PAGINATE_QUERY)
+        self.GET_BY_TAG_URL = ''.join([self.BASE_URL, "/tags/{tag}/people",
+                                       self.PAGINATE_QUERY])
 
     def get_people_by_tag(self, tag, per_page=100):
         """
