@@ -33,12 +33,6 @@ class Tags(NationBuilderApi):
     def __init__(self, slug, token):
         super(Tags, self).__init__(slug, token)
 
-        self.GET_PERSON_TAGS_URL = self.GET_PERSON_URL + "/taggings"
-        self.REMOVE_TAG_URL = self.GET_PERSON_URL + "/taggings/{1}"
-        self.LIST_TAGS_URL = self.BASE_URL + "/tags" + self.PAGINATE_QUERY
-        self.GET_BY_TAG_URL = ''.join([self.BASE_URL, "/tags/{tag}/people",
-                                       self.PAGINATE_QUERY])
-
     def get_people_by_tag(self, tag, per_page=100):
         """
         Get a list of all the people with a tag.
@@ -86,7 +80,7 @@ class Tags(NationBuilderApi):
         # person = self.get_person(person_id)
         # return json.loads(person)['person']['tags']
         self._authorise()
-        url = self.GET_PERSON_TAGS_URL.format(str(person_id))
+        url = self.PERSON_TAGS_URL.format(str(person_id))
         headers, content = self.http.request(url, headers=self.HEADERS)
         self._check_response(headers, content, "Get Person Tags", url)
         return json.loads(content)['taggings']
@@ -136,3 +130,4 @@ class Tags(NationBuilderApi):
         self._check_response(hdr, cnt,
                              "Remove Tag '%s' from id %d" % (tag, person_id),
                              url)
+        

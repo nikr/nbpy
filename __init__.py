@@ -39,30 +39,5 @@ tags: Contains the Tags class used to access the Tags API
 
 lists: Contains the NBLists class used to access the Lists API.
 
-This file also includes the definitions for various URLs used to access the
-various NationBuilder APIs.
 
 """
-
-BASE_URL = 'https://{slug}.nationbuilder.com/api/v1'
-PAGINATE_QUERY = "?page={page}&per_page={per_page}"
-GET_PERSON_URL = BASE_URL + '/people/{0}'
-MATCH_EMAIL_URL = BASE_URL + "/people/match?email={0}"
-UPDATE_PERSON_URL = GET_PERSON_URL
-REMOVE_TAG_URL = UPDATE_PERSON_URL + "/taggings/{1}"
-LIST_TAGS_URL = BASE_URL + "/tags" + PAGINATE_QUERY
-GET_BY_TAG_URL = BASE_URL + "/tags/{tag}/people" + PAGINATE_QUERY
-REGISTER_PERSON_URL = GET_PERSON_URL + "/register"
-
-LIST_INDEX_URL = BASE_URL + '/lists' + PAGINATE_QUERY
-GET_LIST_URL = BASE_URL + '/lists/{list_id}/people' + PAGINATE_QUERY
-
-GET_CONTACT_URL = GET_PERSON_URL + "/contacts"
-
-USER_AGENT = "nbpy/0.2"
-
-HEADERS = {
-    'Content-type': 'application/json',
-    "Accept": "application/json",
-    "User-Agent": USER_AGENT,
-}

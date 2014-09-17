@@ -23,11 +23,6 @@ class People(NationBuilderApi):
     def __init__(self, slug, token):
         super(People, self).__init__(slug, token)
 
-        self.MATCH_URL = self.BASE_URL + '/people/match?'
-        self.MATCH_EMAIL_URL = self.BASE_URL + "/people/match?email={0}"
-        self.UPDATE_PERSON_URL = self.GET_PERSON_URL
-        self.REGISTER_PERSON_URL = self.GET_PERSON_URL + "/register"
-
     def get_person(self, person_id):
         """
         Retrieves a person's record from NationBuilder.
@@ -41,7 +36,7 @@ class People(NationBuilderApi):
         self._authorise()
         # we need it as a string...
         person_id = urllib2.quote(str(person_id))
-        url = self.GET_PERSON_URL.format()
+        url = self.GET_PERSON_URL.format(person_id)
         headers, content = self.http.request(url, headers=self.HEADERS)
         self._check_response(headers, content, "Get Person", url)
         return json.loads(content)
@@ -120,7 +115,7 @@ class People(NationBuilderApi):
         self._authorise()
         query_string = '&'.join([key + '=' + kwargs[key] for key in
                                  kwargs.keys])
-        url = self.MATCH_URL + query_string
+        url = self.MATCH_PERSON_URL + query_string
         hdr, cnt = self.http.request(url, headers=self.HEADERS)
         self._check_response(hdr, cnt, "Match %s" % kwargs, url)
         return json.loads(cnt)
