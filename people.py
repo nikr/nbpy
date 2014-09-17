@@ -7,7 +7,7 @@ classes:
 
 """
 
-import NationBuilderApi
+from nb_api import NationBuilderApi
 import urllib2
 import json
 
