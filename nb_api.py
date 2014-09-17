@@ -33,11 +33,20 @@ Classes:
     NBBadRequestError(NBResponseError)
      -- Exception signifying that the data sent to the server was bad. Usually
         in response to a 400 response from the server.
+
+Basic Usage:
+
+To find all people tagged with the tag "foo":
+
+nb = NationBuilderApi("mynation", "FFAA55DDFFAA22")
+tags = nb.tags().get_people_by_tag("foo")
+print tags
+
 """
 
 import logging
 import httplib2
-from oauth2client import AccessTokenCredentials
+from oauth2client.client import AccessTokenCredentials
 
 log = logging.getLogger('nbpy')
 
@@ -54,8 +63,8 @@ class NationBuilderApi(object):
 
         self.NATION_SLUG = nation_slug
         self.ACCESS_TOKEN = api_key
-        self.BASE_URL = ''.join('https://', self.NATION_SLUG,
-                                '.nationbuilder.com/api/v1')
+        self.BASE_URL = ''.join(['https://', self.NATION_SLUG,
+                                 '.nationbuilder.com/api/v1'])
         self.PAGINATE_QUERY = "?page={page}&per_page={per_page}"
 
         self.GET_PERSON_URL = self.BASE_URL + '/people/{0}'
@@ -67,6 +76,25 @@ class NationBuilderApi(object):
             "Accept": "application/json",
             "User-Agent": self.USER_AGENT,
         }
+        self.http = None
+
+    def _check_response(self, headers, content, attempted_action, url=None):
+        """Log a warning if this is not a 200 OK response,
+        otherwise log the response at debug level"""
+        if headers.status < 200 or headers.status > 299:
+            self._raise_error(attempted_action, headers, content, url)
+        else:
+            log.debug("Request to %s successful.",
+                      url or attempted_action or "Unknown")
+
+    def _raise_error(self, msg, header, body, url):
+        """Raises the correct type of exception."""
+        error_map = {
+            404: NBNotFoundError,
+            400: NBBadRequestError
+        }
+        err = error_map.get(header.status) or NBResponseError
+        raise err(msg, header, body, url)
 
     def _authorise(self):
         """Gets AccessTokenCredentials with the ACCESS_TOKEN and USER_AGENT and
@@ -88,39 +116,23 @@ class NationBuilderApi(object):
         self.http = httplib2.Http(disable_ssl_certificate_validation=True)
         self.http = cred.authorize(self.http)
 
-    def _check_response(self, headers, content, attempted_action, url=None):
-        """Log a warning if this is not a 200 OK response,
-        otherwise log the response at debug level"""
-        if headers.status < 200 or headers.status > 299:
-            self._raise_error(attempted_action, headers, content, url)
-        else:
-            log.debug("Request to %s successful.",
-                      url or attempted_action or "Unknown")
-
-    def _raise_error(self, msg, header, body, url):
-        """Raises the correct type of exception."""
-        error_map = {
-            404: NBNotFoundError,
-            400: NBBadRequestError
-        }
-        err = error_map.get(header.status) or NBResponseError
-        raise err(msg, header, body, url)
-
 
 class NBResponseError(Exception):
-
-    """Base class for all non-200 OK responses.
+    """
+    Base class for all non-200 OK responses.
     Includes the following additional fields:
     header: the response headers
     body: the response body
     url: the requested url.
     """
-
     def __init__(self, msg, header, body, url):
         self.url = url
         self.header = header
         self.body = body
-        Exception.__init__(msg)
+        print url
+        print "Header: %s" % header
+        print "Body: %s" % body
+        Exception.__init__(self, msg)
 
 
 class NBBadRequestError(NBResponseError):
