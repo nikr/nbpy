@@ -39,5 +39,4 @@ tags: Contains the Tags class used to access the Tags API
 
 lists: Contains the NBLists class used to access the Lists API.
 
-
 """
