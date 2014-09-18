@@ -77,12 +77,11 @@ class NBTags(NationBuilderApi):
         Returns:
             a (possibly empty) list of tags.
         """
-        # person = self.get_person(person_id)
-        # return json.loads(person)['person']['tags']
         self._authorise()
         url = self.PERSON_TAGS_URL.format(str(person_id))
         headers, content = self.http.request(url, headers=self.HEADERS)
-        self._check_response(headers, content, "Get Person Tags", url)
+        self._check_response(headers, content,
+                             "Get Person %d Tags" % person_id, url)
         return json.loads(content)['taggings']
 
     def list_tags(self, tags_per_page=100):
@@ -115,13 +114,16 @@ class NBTags(NationBuilderApi):
         return tags
 
     def remove_tag(self, person_id, tag):
-        """removes a tag from a person.
+        """
+        removes a tag from a person.
 
         Parameters:
             person_id : NationBuilder ID of the person to remove the tag from
             tag : the tag to remove.
 
-        There is no response from this call, so this always returns None. """
+        Returns:
+            None.
+        """
         self._authorise()
         url = self.REMOVE_TAG_URL.format(urllib2.quote(str(person_id)),
                                          urllib2.quote(str(tag)))
@@ -132,7 +134,18 @@ class NBTags(NationBuilderApi):
                              url)
 
     def tag_person(self, nb_id, tag):
-        """Tags a person with a tag."""
+        """
+        Tags a person with a tag.
+
+        If the tag used doesn't already exist in the nation, it will add it.
+
+        Parameters:
+            nb_id : NationBuilder ID of the person to tag
+            tag : the tag to add.
+
+        Returns:
+            A Dictionary-like object of the person's tags after the addition.
+        """
         self._authorise()
         url = self.PERSON_TAGS_URL.format(str(nb_id))
         body = {
