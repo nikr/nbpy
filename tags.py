@@ -28,10 +28,10 @@ from nb_api import NationBuilderApi
 import json
 
 
-class Tags(NationBuilderApi):
+class NBTags(NationBuilderApi):
 
     def __init__(self, slug, token):
-        super(Tags, self).__init__(slug, token)
+        super(NBTags, self).__init__(slug, token)
 
     def get_people_by_tag(self, tag, per_page=100):
         """
@@ -130,4 +130,20 @@ class Tags(NationBuilderApi):
         self._check_response(hdr, cnt,
                              "Remove Tag '%s' from id %d" % (tag, person_id),
                              url)
-        
+
+    def tag_person(self, nb_id, tag):
+        """Tags a person with a tag."""
+        self._authorise()
+        url = self.PERSON_TAGS_URL.format(str(nb_id))
+        body = {
+            "tagging":
+            {"tag": urllib2.quote(tag)}
+        }
+        hdr, cnt = self.http.request(url, method="PUT",
+                                     headers=self.HEADERS,
+                                     body=json.dumps(body))
+        self._check_response(hdr, cnt,
+                             "Tag %d with '%s'" % (nb_id, tag),
+                             url)
+        return json.loads(cnt)
+        # TODO: check that the returned content includes the tag.
