@@ -63,7 +63,8 @@ class Lists(NationBuilderApi):
         return content
 
     def get_list_page(self, list_id, page_num=1, per_page=50):
-        """Gets a single page of results of a list.
+        """
+        Gets a single page of results of a list.
 
         Parameters:
             list_id: the ID of the list.

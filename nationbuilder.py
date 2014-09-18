@@ -26,6 +26,7 @@ from lists import Lists
 
 
 class NationBuilder(object):
+
     """
     Entry point to nationbuilder APIs.
 
@@ -34,6 +35,7 @@ class NationBuilder(object):
         tags : nbpy.tags.NBTags instance for accessing People Tags API
         lists : nbpy.lists.NBList instance for accessing Lists API
     """
+
     def __init__(self, slug, api_key):
         super(NationBuilder, self).__init__()
 

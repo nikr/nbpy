@@ -133,6 +133,7 @@ class NationBuilderApi(object):
 
 
 class NBResponseError(Exception):
+
     """
     Base class for all non-200 OK responses.
     Includes the following additional fields:
@@ -140,6 +141,7 @@ class NBResponseError(Exception):
     body: the response body
     url: the requested url.
     """
+
     def __init__(self, msg, header, body, url):
         self.url = url
         self.header = header
