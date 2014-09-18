@@ -166,3 +166,19 @@ class People(NationBuilderApi):
         hdr, content = self.http.request(url, headers=self.HEADERS)
         self._check_response(hdr, content,
                              "Do registration for ID %d" % nb_id, url)
+
+    def delete_person(self, nb_id):
+        """
+        Deletes the person with the given ID.
+
+        Parameters:
+            nb_id : The id of the person to delete.
+
+        Returns:
+            None
+        """
+        self._authorise()
+        url = self.GET_PERSON_URL.format(str(nb_id))
+        hdr, cnt = self.http.request(uri=url, method="DELETE",
+                                     headers=self.HEADERS)
+        self._check_response(hdr, cnt, "Delete user %d" % nb_id, url)
