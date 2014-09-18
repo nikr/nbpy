@@ -42,3 +42,29 @@ class NationBuilder(object):
         self.people = People(slug, api_key)
         self.tags = NBTags(slug, api_key)
         self.lists = Lists(slug, api_key)
+
+
+def from_file(filename):
+    """
+    Factory method that creates a NationBuilder instance from a file containing
+    the nation slug and the api key.
+
+    The format of the file is as follows:
+
+        slug: slug
+        api_key: key
+
+    pretty simple I reckon.
+    """
+    with open(filename, 'r') as creds:
+        slug = None
+        key = None
+        for line in creds:
+            parts = line.split(":")
+            if parts[0].strip() == 'slug':
+                slug = parts[1].strip()
+            elif parts[0].strip() == 'api_key':
+                key = parts[1].strip()
+        if slug is not None and key is not None:
+            return NationBuilder(slug, key)
+        return None
