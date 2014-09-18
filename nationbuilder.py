@@ -5,11 +5,12 @@
 # Author: Niklas Rehfeld
 
 """
-The  NationBuilder object is used as a way of accessing a NationBuilder Nation. It contains attributes for accessing the various API endpoints. 
+The  NationBuilder object is used as a way of accessing a NationBuilder Nation.
+It contains attributes for accessing the various API endpoints.
 
-Example usage: 
+Example usage:
 
-# create a NationBuilder object that accesses the slug.nationbuilder.com nation 
+# create a NationBuilder object that accesses the slug.nationbuilder.com nation
 my_site = nbpy.nationbuilder.NationBuilder("slug", MY_API_KEY)
 
 # get person with ID=123
