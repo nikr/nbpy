@@ -197,6 +197,9 @@ class People(NationBuilderApi):
         Parameters:
             per_page : the number of people to fetch at a time.
                 0 < per_page <= 100
+
+        Note that the returned people records are abbreviated records. To get
+        the full record use get_person() with the NB ID from this record.
         """
         # TODO: it would be nice to fetch the next page asynchronously
         # before it is needed.
