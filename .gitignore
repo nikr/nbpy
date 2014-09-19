@@ -77,5 +77,4 @@ tramp
 /elpa/
 
 # Ignore libraries
-/httplib2/
-/oauth2client/
+/creds
