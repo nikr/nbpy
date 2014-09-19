@@ -45,6 +45,8 @@ class People(NationBuilderApi):
         """
         Update a person's record with arbitrary info.
 
+        Note that not all fields in a person record can be written. 
+
         Parameters:
             person_id - the person's NB id.
             update_str - string of json representation of the modifications
@@ -113,8 +115,10 @@ class People(NationBuilderApi):
         'phone', or 'mobile'.
         """
         self._authorise()
-        query_string = '&'.join([key + '=' + kwargs[key] for key in
-                                 kwargs.keys])
+        # turn the kwargs into url-style ones. k1=v1&k2=v2...
+        keyvals = ['='.join((urllib2.quote(key), urllib2.quote(val)))
+                   for key, val in kwargs.iteritems()]
+        query_string = '&'.join(keyvals)
         url = self.MATCH_PERSON_URL + query_string
         hdr, cnt = self.http.request(url, headers=self.HEADERS)
         self._check_response(hdr, cnt, "Match %s" % kwargs, url)
