@@ -257,3 +257,38 @@ class People(NationBuilderApi):
             for person in page['results']:
                 yield person
             page = get_people_page(current_page)
+
+    def get_nearby(self, lat, lng, dist, use_km=False, per_page=100):
+        """
+        Fetches all people within a radius of dist miles of the
+        coordinates (lat,lng).
+
+        Parameters:
+            lat : latitude of the coordinate in WGS84
+            lng : longitude of the coordinate
+            dist : radius to search. (default in miles, see use_metric)
+            use_km : set to True if dist is in kilometers
+            per_page : number of records to fetch at a time
+
+        Returns:
+            a list of people records.
+        """
+        self._authorise()
+        km = 0.621371
+        if use_km:
+            dist = dist * km
+
+        def get_nearby_page(page):
+            url = self.NEARBY_URL.format(lat=lat, lng=lng, dist=dist,
+                                         per_page=per_page, page=page)
+            hdr, cnt = self.http.request(uri=url, headers=self.HEADERS)
+            self._check_response(hdr, cnt, "Get nearby", url)
+            return json.loads(cnt)
+
+        first_page = get_nearby_page(1)
+        total_pages = first_page['total_pages']
+        result = first_page['results']
+        for p in xrange(2, total_pages + 1):
+            result += get_nearby_page(p)
+
+        return result
