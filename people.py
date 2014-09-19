@@ -45,7 +45,7 @@ class People(NationBuilderApi):
         """
         Update a person's record with arbitrary info.
 
-        Note that not all fields in a person record can be written. 
+        Note that not all fields in a person record can be written.
 
         Parameters:
             person_id - the person's NB id.
@@ -186,3 +186,32 @@ class People(NationBuilderApi):
         hdr, cnt = self.http.request(uri=url, method="DELETE",
                                      headers=self.HEADERS)
         self._check_response(hdr, cnt, "Delete user %d" % nb_id, url)
+
+    def get_people_iter(self, per_page=100):
+        """
+        Retrieves all people in the nation.
+
+        This is implemented as a generator function, as the amount of data
+        returned can be pretty big.
+
+        Parameters:
+            per_page : the number of people to fetch at a time.
+                0 < per_page <= 100
+        """
+        # TODO: it would be nice to fetch the next page asynchronously
+        # before it is needed.
+        def get_people_page(page):
+            self._authorise()
+            url = self.GET_PEOPLE_URL + self.PAGINATE_QUERY.format(
+                page=page, per_page=per_page)
+            hdr, cnt = self.http.request(uri=url, headers=self.HEADERS)
+            self._check_response(hdr, cnt, "Get people page %d" % page, url)
+            return json.loads(cnt)
+        # need to get the first page before to see the range
+        page = get_people_page(1)
+        total_pages = page['total_pages']
+        # loop starts at 2 because we already have the first page.
+        for current_page in xrange(2, total_pages):
+            for person in page['results']:
+                yield person
+            page = get_people_page(current_page)

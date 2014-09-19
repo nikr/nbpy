@@ -66,7 +66,8 @@ class NationBuilderApi(object):
                                  '.nationbuilder.com/api/v1'])
         self.PAGINATE_QUERY = "?page={page}&per_page={per_page}"
         # People API URLs.
-        self.GET_PERSON_URL = self.BASE_URL + '/people/{0}'
+        self.GET_PEOPLE_URL = self.BASE_URL + '/people'
+        self.GET_PERSON_URL = self.GET_PEOPLE_URL + '/{0}'
         self.MATCH_PERSON_URL = self.BASE_URL + '/people/match?'
         self.MATCH_EMAIL_URL = self.BASE_URL + "/people/match?email={0}"
         self.UPDATE_PERSON_URL = self.GET_PERSON_URL
