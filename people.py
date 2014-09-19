@@ -113,6 +113,8 @@ class People(NationBuilderApi):
 
         The keyword arguments can be 'email', 'first_name', 'last_name',
         'phone', or 'mobile'.
+
+        To find people that have non-unique attributes, use search()
         """
         self._authorise()
         # turn the kwargs into url-style ones. k1=v1&k2=v2...
@@ -123,6 +125,43 @@ class People(NationBuilderApi):
         hdr, cnt = self.http.request(url, headers=self.HEADERS)
         self._check_response(hdr, cnt, "Match %s" % kwargs, url)
         return json.loads(cnt)
+
+    def search(self, per_page=100, **kwargs):
+        """
+        Find people that have certain attributes.
+
+        Parameters:
+            per_page : the number of people to fetch at a time.
+            kwargs : attributes to search for. Allowable keys are:
+                first_name, last_name, city, state, sex, birthdate,
+                updated_since, with_mobile, civicrm_id, county_file_id,
+                state_file_id, datatrust_id, dw_id, media_market_id,
+                membership_level_id, ngp_id, pf_strat_id, van_id,
+                salesforce_id, rnc_id, rnc_regid, external_id,
+                custom_values (as a string).
+
+        See http://nationbuilder.com/people_api "Search Endpoint" for details.
+
+        Returns a list of abbreviated person records.
+        """
+        self._authorise()
+        keyvals = ['='.join((urllib2.quote(key), urllib2.quote(val)))
+                   for key, val in kwargs.iteritems()]
+        query = self.SEARCH_PERSON_URL + '&' + '&'.join(keyvals)
+
+        def get_search_page(page):
+            url = query.format(page=page, per_page=per_page)
+            hdr, cnt = self.http.request(uri=url, headers=self.HEADERS)
+            self._check_response(hdr, cnt, "Search %s" % keyvals, url)
+            return json.loads(cnt)
+
+        first_page = get_search_page(1)
+        total_pages = first_page['total_pages']
+        result = first_page['results']
+        for page_no in xrange(2, total_pages + 1):
+            result += get_search_page(page_no)['results']
+
+        return result
 
     def get_person_by_email(self, email):
         """Returns the first person that has a given email address.
@@ -214,7 +253,7 @@ class People(NationBuilderApi):
         page = get_people_page(1)
         total_pages = page['total_pages']
         # loop starts at 2 because we already have the first page.
-        for current_page in xrange(2, total_pages):
+        for current_page in xrange(2, total_pages + 1):
             for person in page['results']:
                 yield person
             page = get_people_page(current_page)

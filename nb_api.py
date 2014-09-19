@@ -70,6 +70,8 @@ class NationBuilderApi(object):
         self.GET_PERSON_URL = self.GET_PEOPLE_URL + '/{0}'
         self.MATCH_PERSON_URL = self.BASE_URL + '/people/match?'
         self.MATCH_EMAIL_URL = self.BASE_URL + "/people/match?email={0}"
+        self.SEARCH_PERSON_URL = (self.GET_PEOPLE_URL + '/search'
+                                  + self.PAGINATE_QUERY)
         self.UPDATE_PERSON_URL = self.GET_PERSON_URL
         self.REGISTER_PERSON_URL = self.GET_PERSON_URL + "/register"
         # Tags API URLs
