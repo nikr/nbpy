@@ -41,7 +41,7 @@ class People(NationBuilderApi):
         self._check_response(headers, content, "Get Person", url)
         return json.loads(content)
 
-    def update_person(self, person_id, update_str):
+    def update_person(self, person_id, update_body):
         """
         Update a person's record with arbitrary info.
 
@@ -63,11 +63,47 @@ class People(NationBuilderApi):
         """
         self._authorise()
         url = self.UPDATE_PERSON_URL.format(urllib2.quote(str(person_id)))
+        if isinstance(update_body, str):
+            update_str = update_body
+        else:
+            update_str = json.dumps(update_body)
         header, content = self.http.request(url, method="PUT",
                                             body=update_str,
                                             headers=self.HEADERS)
         self._check_response(header, content,
                              "Update person with id %d" % person_id, url)
+        return json.loads(content)
+
+    def create_person(self, person_body):
+        """
+        Create a person.
+        A person is considered valid with a name, a phone number or an email.
+
+        Parameters:
+            person_body : The body of the person to create. e.g.
+        {
+            "person":
+            {
+                "email": "bob@example.com",
+                "last_name": "Smith",
+                "first_name": "Bob",
+                "sex": "M",
+                "employer": "Dexter Labs",
+                "party": "P",
+                "registered_address": {
+                    "state": "TX",
+                    "country_code": "US"
+                }
+            }
+        }
+
+        Returns a dict-like representation of the person's complete record.
+        """
+        self._authorise()
+        url = self.GET_PEOPLE_URL
+        header, content = self.http.request(uri=url, headers=self.HEADERS,
+                                            method='POST')
+        self._check_response(header, content, "Create person", url)
         return json.loads(content)
 
     def set_recruiter_id(self, person_id, recruiter_id):
