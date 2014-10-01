@@ -11,7 +11,7 @@ It relies on [httplib2](https://code.google.com/httplib2) and [oauth2client](htt
 
 It also uses the builtin (I think) `json`, `urllib2` and `logging` modules. 
 
-There is a nicer version of this that I am doing, in the other branch of this repo. It includes better error handling (fail-fast) and is split into multiple modules. It is currently under development, and should be usable by the end of September 2014. 
+There is a nicer version of this that I am doing, in the other branch of this repo. It includes better error handling (fail-fast) and is split into multiple modules. It is currently under development, and should be usable by the middle of October 2014. 
 
 Example Usage: 
 
