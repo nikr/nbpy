@@ -89,6 +89,10 @@ class NationBuilderApi(object):
                                      self.PAGINATE_QUERY))
         # Contacts API URLs
         self.GET_CONTACT_URL = self.GET_PERSON_URL + "/contacts"
+        self.CONTACT_TYPES_URL = self.BASE_URL + '/settings/contact_types'
+        self.UPDATE_CONTACT_TYPE_URL = self.CONTACT_TYPES_URL + '/{id}'
+        self.CONTACT_METHODS_URL = self.BASE_URL + '/settings/contact_methods'
+        self.CONTACT_STATUS_URL = self.BASE_URL + '/settings/contact_statuses'
 
         self.USER_AGENT = "nbpy/0.2"
 
