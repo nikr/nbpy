@@ -23,6 +23,7 @@ list_five = my_site.lists.get_list(5)
 from people import People
 from tags import NBTags
 from lists import Lists
+from contacts import Contacts
 
 
 class NationBuilder(object):
@@ -42,6 +43,7 @@ class NationBuilder(object):
         self.people = People(slug, api_key)
         self.tags = NBTags(slug, api_key)
         self.lists = Lists(slug, api_key)
+        self.contacts = Contacts(slug, api_key)
 
 
 def from_file(filename):
