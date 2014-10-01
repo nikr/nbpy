@@ -91,15 +91,16 @@ class Contacts(nb_api.NationBuilderApi):
             nb_id : the NationBuilder ID of the person.
             per_page : the number of contacts to fetch at once.
 
-        Returns a list of contacts. 
+        Returns a list of contacts.
         """
         base_url = self.GET_CONTACT_URL.format(nb_id) + self.PAGINATE_QUERY
-        
+
         def get_person_contact_page(page):
             self._authorise()
             url = base_url.format(page=page, per_page=per_page)
             header, content = self.http.request(uri=url, headers=self.HEADERS)
-            self._check_response(header, content, "Get Person Contact page", url)
+            self._check_response(
+                header, content, "Get Person Contact page", url)
             return json.loads(content)
 
         first_page = get_person_contact_page(1)
@@ -115,7 +116,6 @@ class Contacts(nb_api.NationBuilderApi):
         Returns a list of contact types defined in this nation.
         """
         raise NotImplementedError("get_contact_types is not yet implemented.")
-        
 
     def create_contact_type(self, name):
         """
@@ -156,16 +156,16 @@ class Contacts(nb_api.NationBuilderApi):
     def list_contact_methods(self):
         """
         List the contact methods available.
-        
+
         Returns a list of contact method entries, which look like
         {'name' : 'Foo Bar', 'api_name' : 'foo_bar'}
         """
         raise NotImplementedError()
-        
+
     def list_contact_statuses(self):
         """
         List the contact statuses available.
-        
+
         Returns a list of contact status entries, which look like
         {'name': 'Bad Info', 'api_name': 'bad_info'}
         """
