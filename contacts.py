@@ -169,4 +169,8 @@ class Contacts(nb_api.NationBuilderApi):
         Returns a list of contact status entries, which look like
         {'name': 'Bad Info', 'api_name': 'bad_info'}
         """
-        raise NotImplementedError()
+        self._authorise()
+        url = self.CONTACT_STATUS_URL
+        hdr, cont = self.http.request(uri=url, headers=self.HEADERS)
+        self._check_response(hdr, cont, "List Contact Statuses", url)
+        return json.loads(cont)['results']
