@@ -101,3 +101,22 @@ class Lists(NationBuilderApi):
 
         self.logger.debug("retrieved %d people", len(lists))
         return lists
+
+    def get_list_iter(self, list_id, per_page=100):
+        """
+        Generator function that gets the people in a list. may be more
+        efficient than get_list() in some cases.
+        """
+        self._authorise()
+        page = 1
+        while True:
+            url = self.GET_LIST_URL.format(list_id=list_id,
+                                           per_page=per_page, page=page)
+            header, content = self.http.request(url, headers=self.HEADERS)
+            self._check_response(header, content, "Get list", url)
+            content = json.loads(content)
+            for person in content['results']:
+                yield person
+            page += 1
+            if page > content['total_pages']:
+                break
