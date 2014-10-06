@@ -17,13 +17,13 @@ There is a nicer version of this that I am doing, in the other branch of this re
 Example Usage: 
 
 ```python
-import nationbuilder
+from nbpy import nationbuilder
 import json
 
-# connect to foo.nationbuilder.com People API
-nb_people = nationbuilder.People('foo', 'FFAACC1123344556677889900')
+# connect to nationbuilder using a credentials file
+nb = nationbuilder.from_file('credentials_file')
 # get steve's (NationBuilder ID = 123)  details
-steve = people.get_person(123)
+steve = nb.people.get_person(123)
 print "First Name: %s" % steve['person']['first_name']
 ```
 
