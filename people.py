@@ -328,3 +328,13 @@ class People(NationBuilderApi):
             result += get_nearby_page(p)
 
         return result
+
+    
+    def me(self):
+        """Fetches the Access token owner's profile"""
+        self._authorise()
+        url = self.GET_PEOPLE_URL + '/me'
+        hdr, cnt = self.http.request(uri=url, headers=self.HEADERS)
+        self._check_response(hdr, cnt, 'Get Me', url)
+        return json.loads(cnt)
+        
