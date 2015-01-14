@@ -2,7 +2,6 @@
 
 
 ## A Python interface to NationBuilder API
-----------------------------------------
 This is very much a work in progress, so only parts of the API are supported (mainly the People endpoints). As it is a work in progress, expect major changes in the library in the not-too-distant future. So if you do build something on top of this library now, it may or may not work in the next version. 
 
 This library is entirely unofficial and not endorsed by nationbuilder.com in any way. 
@@ -12,7 +11,6 @@ It relies on [httplib2](https://github.com/jcgregorio/httplib2) and [oauth2clien
 They can both be installed using pip, as far as I know.
 
 It also uses the builtin `json`, `urllib2` and `logging` modules. 
-
 
 ### Example Usage: 
 
